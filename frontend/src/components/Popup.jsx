@@ -11,42 +11,22 @@ const Popup = (props) => {
   const [highRiskRegions, setHighRiskRegions] = useState([]);
 
   useEffect(() => {
-    const getSortedRegions = async (data, props) => {
-      const regionData = await Promise.all(
-        data.regions
-          .filter((region) => region.hr_uid !== 9999)
-          .map((region) => {
-            return fetch(
-              `/api/v1/CanadaCovidInfo/${props.province}/${region.hr_uid}/regionInfo`
-            )
-              .then((response) => {
-                return response.json();
-              })
-              .then((regionData) => {
-                return regionData;
-              });
-          })
-      );
-      return regionData.sort(
-        (a, b) => a.active_cases_per_million - b.active_cases_per_million
-      );
-    };
-
     fetch(`/api/v1/CanadaCovidInfo/${props.province}/provinceInfo`)
       .then((response) => {
         return response.json();
       })
-      .then(async (data) => {
+      .then((data) => {
         setName(data.prov);
         setIsSafe(data.isSafe);
-        const sortedRegions = await getSortedRegions(data, props);
-
+        const sortedRegions = data.regions.sort(
+          (a, b) => a.active_cases_per_million - b.active_cases_per_million
+        );
         setLowRiskRegions(sortedRegions.slice(0, 2));
         setHighRiskRegions(
           sortedRegions.slice(sortedRegions.length - 2, sortedRegions.length)
         );
       });
-  }, []);
+  }, [props.province]);
 
   return (
     <div className="popup">
