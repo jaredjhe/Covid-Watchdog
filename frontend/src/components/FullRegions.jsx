@@ -72,15 +72,20 @@ function FullRegions(props) {
         const provinceDataJson = await fetch(`http://localhost:8000/api/v1/CanadaCovidInfo/${provinceCode}/provinceInfo`);
         const provinceData = await provinceDataJson.json();
         console.log(provinceData)
-        const regionsDataArray = Promise.all(provinceData.regions.map(async (el) => await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`)))
-        .then(res => {
-          Promise.all(regionsDataJsonArray.map(async (el) => await el.json()))
-        });
-        const regionsDataArray = await ;
+        const regionsDataArray = Promise.all((provinceData.regions).map(async (el) => await fetch(`http://localhost:8000/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`)))
+          .then(res => {
+            for (let i = 0; i < res.length; ++i) {
+              
+            }
+          });
+        // .then(res => {
+        //   Promise.all(regionsDataJsonArray.map(async (el) => await el.json()))
+        // });
+
         // const x = await regionsDataJsonArray[0].json();
-       
+
         // console.log(x);
-        
+
 
 
         // const regionsDataArray = provinceData.regions.map(async (el) => {
@@ -88,12 +93,13 @@ function FullRegions(props) {
         //   const curRegionData = await curRegionDataJson.json();
         //   console.log(curRegionData);
         //   return curRegionData;
-          // return await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`);
+        // return await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`);
         // })
-        // console.log(regionsDataArray);
-        setRegionData(regionsDataJsonArray);
+        console.log("Hello")
+        console.log(regionsDataArray);
+        // setRegionData(regionsDataJsonArray);
       }
-      catch(error) {
+      catch (error) {
         throw new Error(error)
       }
     }
