@@ -10,6 +10,7 @@
     height: 40vh; 
     img {
       width: 50%;
+      margin: 0 1em;
     }
     h2 {
       font-size: 5vh;
@@ -17,6 +18,14 @@
   }
 
   .safe-regions, .warning-regions {
-    margin: 0 1em;
+    padding: 0 1em;
+  }
+  .safe-regions {
+    border-right: 1px solid #d8d7d7;
+  }
+  .warning-regions {
+    h2 {
+      text-align: right;
+    }
   }
 }

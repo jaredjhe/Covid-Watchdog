@@ -71,6 +71,13 @@ export default class CanadaCovidInfo {
                     let vulnerable_proportion = ((population[province] - data[elem]["cumulative_cvaccine"])/ population[province]) + vaccinatedRiskConstant
                     let vulnerable_proportion_safe = vulnerable_proportion <= baselineVulnerable
 
+                    let isSafe = false
+
+                    if ((active_cases_per_million_safe && fully_vaccinated_proportion_safe) || 
+                    (active_cases_per_million_safe && vulnerable_proportion_safe) ||
+                    (fully_vaccinated_proportion_safe && vulnerable_proportion_safe)) {
+                        isSafe = true
+                    }
 
                     let finalResponse = {
                         prov: province,
@@ -87,6 +94,7 @@ export default class CanadaCovidInfo {
                         fully_vaccinated_proportion_safe: fully_vaccinated_proportion_safe,
                         vulnerable_proportion: vulnerable_proportion,
                         vulnerable_proportion_safe: vulnerable_proportion_safe,
+                        isSafe: isSafe,
                         regions: []
                     }
 
@@ -162,6 +170,7 @@ export default class CanadaCovidInfo {
                             fully_vaccinated_proportion_safe: null,
                             vulnerable_proportion: null,
                             vulnerable_proportion_safe: null,
+                            isSafe: null
                         }
 
                         return new  request('https://api.opencovid.ca/other?stat=hr', function (popError, popResponse, popBody) {
@@ -180,6 +189,7 @@ export default class CanadaCovidInfo {
                                                 console.log(caseData)
 
                                                 if (caseData.length !== 0) {
+                                                    
                                                     let active_cases_per_million = 1000000 * (caseData["cases"]) / regionPop
                                                     let active_cases_per_million_safe =  active_cases_per_million <= baselineActiveCases
                                 
@@ -189,12 +199,21 @@ export default class CanadaCovidInfo {
                                                     let vulnerable_proportion = ((regionPop - data[elem]["total_vaccinated"])/ regionPop) + vaccinatedRiskConstant
                                                     let vulnerable_proportion_safe = vulnerable_proportion <= baselineVulnerable
 
+                                                    let isSafe = false
+
+                                                    if ((active_cases_per_million_safe && fully_vaccinated_proportion_safe) || 
+                                                    (active_cases_per_million_safe && vulnerable_proportion_safe) ||
+                                                    (fully_vaccinated_proportion_safe && vulnerable_proportion_safe)) {
+                                                        isSafe = true
+                                                    }
+
                                                     finalResponse.active_cases_per_million = active_cases_per_million
                                                     finalResponse.active_cases_per_million_safe = active_cases_per_million_safe
                                                     finalResponse.fully_vaccinated_proportion = fully_vaccinated_proportion
                                                     finalResponse.fully_vaccinated_proportion_safe = fully_vaccinated_proportion_safe
                                                     finalResponse.vulnerable_proportion = vulnerable_proportion
                                                     finalResponse.vulnerable_proportion_safe = vulnerable_proportion_safe
+                                                    finalResponse.isSafe = isSafe
 
                                                     res.json(finalResponse)
                                                     return
