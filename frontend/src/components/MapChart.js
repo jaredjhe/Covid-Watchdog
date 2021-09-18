@@ -25,8 +25,8 @@ const MapChart = ({ setTooltipContent, callScrollApp }) => {
             padding: "auto",
             border: "solid",
         }}>
-            <ComposableMap projection="geoMercator" data-tip="" width={1000} height={750} projectionConfig={{ scale: 300 }} disableZooming disablePanning>
-                <ZoomableGroup center={[270, 430]} disableZooming disablePanning>
+            <ComposableMap projection="geoMercator" data-tip="" width={1000} height={750} projectionConfig={{ scale: 300 }} disableZzoming disablepanning>
+                <ZoomableGroup center={[270, 430]} disablezooming disablepanning>
                     <Geographies geography={canadaMap}>
                         {({ geographies }) => (
                             geographies.map(geo => (
@@ -38,7 +38,7 @@ const MapChart = ({ setTooltipContent, callScrollApp }) => {
                                     // onClick={switchPaths}
                                     onMouseEnter={() => {
                                         const { name } = geo.properties;
-                                        setTooltipContent(<FullRegions />)
+                                        setTooltipContent(<FullRegions provinceCode={"ON"} />)
                                     }}
                                     onClick={() => {
                                         const { name } = geo.properties;

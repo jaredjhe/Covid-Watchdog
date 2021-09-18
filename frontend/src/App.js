@@ -16,7 +16,7 @@ function App() {
   return (
     <div>
       <TestMap callScrollApp={callScrollApp} />
-      {province !== "" && <FullRegions />}
+      {province !== "" && <FullRegions provinceCode={province} />}
     </div>
   );
 }
