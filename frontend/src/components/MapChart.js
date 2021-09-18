@@ -7,6 +7,7 @@ import {
 } from "react-simple-maps";
 import { geoCentroid } from "d3-geo";
 import FullRegions from "./FullRegions";
+import Popup from "./Popup";
 
 let canadaMap = require('../mapshapes/Canada_Map.json')
 
@@ -38,12 +39,13 @@ const MapChart = ({ setTooltipContent, callScrollApp }) => {
                                     // onClick={switchPaths}
                                     onMouseEnter={() => {
                                         const { name } = geo.properties;
-                                        console.log(name);
-                                        setTooltipContent(<FullRegions provinceCode={"ON"} />)
+                                        console.log(geo);
+                                        console.log((geo.id).substring(3));
+                                        setTooltipContent(<Popup province={(geo.id).substring(3)} />)
                                     }}
                                     onClick={() => {
                                         const { name } = geo.properties;
-                                        chartcallScrollApp(name);
+                                        chartcallScrollApp((geo.id).substring(3));
                                     }}
                                     onMouseLeave={() => {
                                         setTooltipContent("");
@@ -51,11 +53,11 @@ const MapChart = ({ setTooltipContent, callScrollApp }) => {
                                     style={{
                                         default: {
                                             fill: "#D6D6DA",
-                                            outline: "none"
+                                            outline: "none",
                                         },
                                         hover: {
                                             fill: "#F53",
-                                            outline: "none"
+                                            outline: "none",
                                         },
                                         pressed: {
                                             fill: "#E42",
