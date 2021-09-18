@@ -13,7 +13,7 @@ function FullRegions(props) {
   const [regionData, setRegionData] = useState([]);
 
   useEffect(() => {
-    fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/provinceInfo`)
+    fetch(`http://localhost:5000/api/v1/CanadaCovidInfo/${provinceCode}/provinceInfo`)
       .then(res => res.json())
       .then(
         (result) => {
