@@ -12,7 +12,7 @@ const Popup = (props) => {
 
   useEffect(() => {
     // TODO: REMOVE TEMP STUFF ============================================
-    setName("ON");
+    setName(props.province);
     setIsSafe(false);
     setLowRiskRegions([
       {
