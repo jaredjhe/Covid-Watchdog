@@ -4,13 +4,14 @@ import CovidStats from "./CovidStats";
 import "../styles/Popup.scss";
 import provinceDesc from "./provinceDesc.json";
 
-const Popup = () => {
+const Popup = (props) => {
   const [name, setName] = useState("");
   const [isSafe, setIsSafe] = useState(true);
   const [lowRiskRegions, setLowRiskRegions] = useState([]);
   const [highRiskRegions, setHighRiskRegions] = useState([]);
 
   useEffect(() => {
+    // TODO: REMOVE TEMP STUFF ============================================
     setName("ON");
     setIsSafe(false);
     setLowRiskRegions([
@@ -34,38 +35,15 @@ const Popup = () => {
       },
     ]);
 
-    // provinceData = {
-    //   province_code: "ON",
-    //   active_cases_per_million: 500,
-    //   fully_vaccinated_proportion: 0.89,
-    //   vulnerable_proportion: 0.03,
-    //   is_safe: true,
-    //   regions: [
-    //     {
-    //       hr_uid: 3526,
-    //       health_region: "Algoma",
-    //       health_region_health_org: "The District of Algoma Health Unit",
-    //       prov: "ON",
-    //     },
-    //     {
-    //       hr_uid: 3527,
-    //       health_region: "Brant",
-    //       health_region_health_org: "Brant County Health Unit",
-    //       prov: "ON",
-    //     },
-    //   ],
-    // };
-
-    // fetch("allregs")
+    // fetch(`/api/v1/CanadaCovidInfo/${props.province}/provinceInfo`)
     //   .then((response) => {
     //     return response.json();
     //   })
     //   .then((data) => {
     //     setName(data.province_code);
     //     data.regions.map((region) => {
-    //       fetch("eachregion")
+    //       fetch(`/api/v1/CanadaCovidInfo/${props.province}/${props.province.hr_uid}/regionInfo`)
     //         .then((response) => {
-    //           // "api/werjerhihwerh/${region.hr_uid"}
     //           return response.json();
     //         })
     //         .then((data) => {
@@ -93,10 +71,10 @@ const Popup = () => {
               <h1>{name}</h1>
               <h2>{provinceDesc[name]}</h2>
             </div>
-            <img src={TravelIcon} alt="Two people traveling." />
+            <img src={TravelIcon} alt="Two people traveling" />
           </div>
-          <CovidStats displayHeaders={true} regionsData={lowRiskRegions} />
-          <CovidStats displayHeaders={false} regionsData={highRiskRegions} />
+          <CovidStats displayHeader={true} regionsData={lowRiskRegions} />
+          <CovidStats displayHeader={false} regionsData={highRiskRegions} />
         </div>
       </div>
     </div>
