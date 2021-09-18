@@ -1,12 +1,12 @@
-import CovidDataTable from './components/CovidDataTable'
+import FullRegions from './components/FullRegions';
 import './styles/App.scss';
-import './styles/CovidDataTable.scss'
+import './styles/CovidStats.scss'
+import './styles/FullRegions.scss'
 
 function App() {
   return (
     <div>
-      <CovidDataTable displayHeader/>
-      <CovidDataTable />
+      <FullRegions />
     </div>
   );
 }

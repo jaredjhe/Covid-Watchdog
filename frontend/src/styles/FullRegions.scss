@@ -1,0 +1,22 @@
+.full-regions {
+  display: flex;
+  justify-content: space-between;
+
+  .call-to-action {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    // Height equired to be fixed so table rows align
+    height: 40vh; 
+    img {
+      width: 50%;
+    }
+    h2 {
+      font-size: 5vh;
+    }
+  }
+
+  .safe-regions, .warning-regions {
+    margin: 0 1em;
+  }
+}
