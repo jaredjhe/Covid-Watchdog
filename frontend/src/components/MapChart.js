@@ -5,27 +5,22 @@ import {
     Geography,
     ZoomableGroup
 } from "react-simple-maps";
-
-// const canadaMap = import('../mapshapes/lpr_000b16a_e.json')
-// import * as data from '../mapshapes/lpr_000b16a_e.json';
+import { geoCentroid } from "d3-geo";
+import FullRegions from "./FullRegions";
 
 let canadaMap = require('../mapshapes/Canada_Map.json')
-let ontarioMap = require('../mapshapes/Ontario_Map.json')
-let kenoraMap = require('../mapshapes/Kenora.json')
 
 const MapChart = ({ setTooltipContent }) => {
-    // TODO
-    const [detail, setDetail] = useState(false);
-    // TODO
-    const [paths, setPaths] = useState()
-    // switchPaths (needed so that when the user zooms in, it goes to another map)
-    const switchPaths = () => {
-
-    }
     return (
-        <div>
-            <ComposableMap projection="geoMercator" data-tip="" projectionConfig={{ scale: 300 }}>
-                <ZoomableGroup center={[250, 425]}>
+        <div style={{
+            position: "relative",
+            left: "0%",
+            top: "20%",
+            width: "110%",
+            height: "110%"
+        }}>
+            <ComposableMap projection="geoMercator" data-tip="" width={1000} height={750} projectionConfig={{ scale: 300 }}>
+                <ZoomableGroup center={[270, 425]} disablePanning disableZooming>
                     <Geographies geography={canadaMap}>
                         {({ geographies }) => (
                             geographies.map(geo => (
@@ -34,10 +29,10 @@ const MapChart = ({ setTooltipContent }) => {
                                     stroke="#FFF"
                                     geography={geo}
                                     fill="#DDD"
-                                    onClick={switchPaths}
+                                    // onClick={switchPaths}
                                     onMouseEnter={() => {
                                         const { name } = geo.properties;
-                                        setTooltipContent(name)
+                                        setTooltipContent(<FullRegions />)
                                     }}
                                     onMouseLeave={() => {
                                         setTooltipContent("");
