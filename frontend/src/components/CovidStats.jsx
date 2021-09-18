@@ -42,9 +42,12 @@
 //   )
 // }
 
+import { regionActiveCasesPerMillionStyle, regionFullyVaccinatedProportionStyle, regionVulnerableProportionStyle } from "../utils";
+
+
 
 function CovidStats(props) {
-  const { displayHeader } = props;
+  const { displayHeader, regionsData } = props;
 
   return (
   <table className="covid-stats">
@@ -52,31 +55,21 @@ function CovidStats(props) {
       <thead>
         <tr>
           <th>City</th>
-          <th>Active Cases</th>
-          <th>Fully Vaxxed</th>
-          <th>Daily Deaths</th>
+          <th>Active Cases per Million</th>
+          <th>Fully Vaxxed (%)</th>
+          <th>Vulnerable Population(%)</th>
         </tr>
       </thead>
     }
     <tbody>
-      <tr>
-        <td>Toronto</td>
-        <td className="safe">1,000</td>
-        <td>1,000</td>
-        <td>1,000</td>
+      {regionsData.map(regionData => (
+        <tr key={regionData.id}>
+          <td>{regionData.name}</td>
+          <td className={regionActiveCasesPerMillionStyle(regionData)}>{regionData.active_cases_per_million}</td>
+          <td className={regionFullyVaccinatedProportionStyle(regionData)}>{regionData.fully_vaccinated_proportion * 100}</td>
+          <td className={regionVulnerableProportionStyle(regionData)}>{regionData.vulnerable_proportion * 100}</td>
       </tr>
-      <tr>
-        <td>Toronto</td>
-        <td>1,000</td>
-        <td>1,000</td>
-        <td className="warning">1,000</td>
-      </tr>
-      <tr>
-        <td>Toronto</td>
-        <td>1,000</td>
-        <td>1,000</td>
-        <td>1,000</td>
-      </tr>
+      ))}
     </tbody>
   </table>)
 }
