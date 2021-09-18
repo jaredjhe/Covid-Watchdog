@@ -11,62 +11,41 @@ const Popup = (props) => {
   const [highRiskRegions, setHighRiskRegions] = useState([]);
 
   useEffect(() => {
-    // TODO: REMOVE TEMP STUFF ============================================
-    setName(props.province);
-    setIsSafe(false);
-    setLowRiskRegions([
-      {
-        name: "Waterloo",
-        id: 8484,
-        active_cases_per_million: 3,
-        fully_vaccinated_proportion: 0.6,
-        vulnerable_proportion: 0.001,
-        is_safe: true,
-      },
-    ]);
-    setHighRiskRegions([
-      {
-        name: "Waterloo",
-        id: 8484,
-        active_cases_per_million: 3,
-        fully_vaccinated_proportion: 0.6,
-        vulnerable_proportion: 0.001,
-        is_safe: true,
-      },
-    ]);
-    // const REPLACEMEWITHPROPSDOTPROVINCE = "ON";
-    // fetch(
-    //   `/api/v1/CanadaCovidInfo/${REPLACEMEWITHPROPSDOTPROVINCE}/provinceInfo`
-    // )
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then(async (data) => {
-    //     console.log(data);
-    //     setName(data.province_code);
-    //     setIsSafe(data.is_safe);
-    //     const retval = await Promise.all(
-    //       data.regions
-    //         .map((region) => {
-    //           return fetch(
-    //             `/api/v1/CanadaCovidInfo/${REPLACEMEWITHPROPSDOTPROVINCE}/${region.hr_uid}/regionInfo`
-    //           )
-    //             .then((response) => {
-    //               return response.json();
-    //             })
-    //             .then((data) => {
-    //               return data;
-    //             });
-    //         })
-    //         .sort(
-    //           (a, b) => a.active_cases_per_million - b.active_cases_per_million
-    //         )
-    //     );
+    const getSortedRegions = async (data, props) => {
+      const regionData = await Promise.all(
+        data.regions
+          .filter((region) => region.hr_uid !== 9999)
+          .map((region) => {
+            return fetch(
+              `/api/v1/CanadaCovidInfo/${props.province}/${region.hr_uid}/regionInfo`
+            )
+              .then((response) => {
+                return response.json();
+              })
+              .then((regionData) => {
+                return regionData;
+              });
+          })
+      );
+      return regionData.sort(
+        (a, b) => a.active_cases_per_million - b.active_cases_per_million
+      );
+    };
 
-    //     // MAY HAVE PROBLEMS DUE TO ASYNC???
-    //     setLowRiskRegions(retval.slice(0, 2));
-    //     setHighRiskRegions(retval.slice(retval.length - 2, retval.length));
-    //   });
+    fetch(`/api/v1/CanadaCovidInfo/${props.province}/provinceInfo`)
+      .then((response) => {
+        return response.json();
+      })
+      .then(async (data) => {
+        setName(data.prov);
+        setIsSafe(data.isSafe);
+        const sortedRegions = await getSortedRegions(data, props);
+
+        setLowRiskRegions(sortedRegions.slice(0, 2));
+        setHighRiskRegions(
+          sortedRegions.slice(sortedRegions.length - 2, sortedRegions.length)
+        );
+      });
   }, []);
 
   return (
