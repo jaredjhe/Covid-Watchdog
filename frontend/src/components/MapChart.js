@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useRef } from "react";
 import {
     ComposableMap,
     Geographies,
@@ -10,17 +10,23 @@ import FullRegions from "./FullRegions";
 
 let canadaMap = require('../mapshapes/Canada_Map.json')
 
-const MapChart = ({ setTooltipContent }) => {
+const MapChart = ({ setTooltipContent, callScrollApp }) => {
+    const chartcallScrollApp = (nameOfProvince) => {
+        callScrollApp(nameOfProvince);
+    }
     return (
         <div style={{
             position: "relative",
             left: "0%",
-            top: "20%",
-            width: "110%",
-            height: "110%"
+            top: "30%",
+            width: "100%",
+            height: "100%",
+            margin: "auto",
+            padding: "auto",
+            border: "solid",
         }}>
-            <ComposableMap projection="geoMercator" data-tip="" width={1000} height={750} projectionConfig={{ scale: 300 }}>
-                <ZoomableGroup center={[270, 425]} disablePanning disableZooming>
+            <ComposableMap projection="geoMercator" data-tip="" width={1000} height={750} projectionConfig={{ scale: 300 }} disableZooming disablePanning>
+                <ZoomableGroup center={[270, 430]} disableZooming disablePanning>
                     <Geographies geography={canadaMap}>
                         {({ geographies }) => (
                             geographies.map(geo => (
@@ -33,6 +39,10 @@ const MapChart = ({ setTooltipContent }) => {
                                     onMouseEnter={() => {
                                         const { name } = geo.properties;
                                         setTooltipContent(<FullRegions />)
+                                    }}
+                                    onClick={() => {
+                                        const { name } = geo.properties;
+                                        chartcallScrollApp(name);
                                     }}
                                     onMouseLeave={() => {
                                         setTooltipContent("");

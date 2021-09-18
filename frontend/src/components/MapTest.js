@@ -6,11 +6,14 @@ import FullRegions from "./FullRegions";
 
 import MapChart from "./MapChart";
 
-const TestMap = () => {
+const TestMap = (props) => {
     const [content, setContent] = useState("");
+    const callbackScrollApp = (nameOfProvince) => {
+        props.callScrollApp(nameOfProvince);
+    }
     return (
         <div>
-            <MapChart setTooltipContent={setContent} />
+            <MapChart setTooltipContent={setContent} callScrollApp={callbackScrollApp} />
             <ReactTooltip>
                 {content}
             </ReactTooltip>
