@@ -12,51 +12,61 @@ const Popup = (props) => {
 
   useEffect(() => {
     // TODO: REMOVE TEMP STUFF ============================================
-    setName(props.province);
-    setIsSafe(false);
-    setLowRiskRegions([
-      {
-        name: "Waterloo",
-        id: 8484,
-        active_cases_per_million: 3,
-        fully_vaccinated_proportion: 0.6,
-        vulnerable_proportion: 0.001,
-        is_safe: true,
-      },
-    ]);
-    setHighRiskRegions([
-      {
-        name: "Waterloo",
-        id: 8484,
-        active_cases_per_million: 3,
-        fully_vaccinated_proportion: 0.6,
-        vulnerable_proportion: 0.001,
-        is_safe: true,
-      },
-    ]);
+    // setName(REPLACEMEWITHPROPSDOTPROVINCE);
+    // setIsSafe(false);
+    // setLowRiskRegions([
+    //   {
+    //     name: "Waterloo",
+    //     id: 8484,
+    //     active_cases_per_million: 3,
+    //     fully_vaccinated_proportion: 0.6,
+    //     vulnerable_proportion: 0.001,
+    //     is_safe: true,
+    //   },
+    // ]);
+    // setHighRiskRegions([
+    //   {
+    //     name: "Waterloo",
+    //     id: 8484,
+    //     active_cases_per_million: 3,
+    //     fully_vaccinated_proportion: 0.6,
+    //     vulnerable_proportion: 0.001,
+    //     is_safe: true,
+    //   },
+    // ]);
+    const REPLACEMEWITHPROPSDOTPROVINCE = "ON";
+    fetch(
+      `/api/v1/CanadaCovidInfo/${REPLACEMEWITHPROPSDOTPROVINCE}/provinceInfo`
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then(async (data) => {
+        console.log(data);
+        setName(data.province_code);
+        setIsSafe(data.is_safe);
+        // const retval = await Promise.all(
+        //   data.regions
+        //     .map((region) => {
+        //       return fetch(
+        //         `/api/v1/CanadaCovidInfo/${REPLACEMEWITHPROPSDOTPROVINCE}/${region.hr_uid}/regionInfo`
+        //       )
+        //         .then((response) => {
+        //           return response.json();
+        //         })
+        //         .then((data) => {
+        //           return data;
+        //         });
+        //     })
+        //     .sort(
+        //       (a, b) => a.active_cases_per_million - b.active_cases_per_million
+        //     )
+        // );
 
-    // fetch(`/api/v1/CanadaCovidInfo/${props.province}/provinceInfo`)
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setName(data.province_code);
-    //     data.regions.map((region) => {
-    //       fetch(`/api/v1/CanadaCovidInfo/${props.province}/${props.province.hr_uid}/regionInfo`)
-    //         .then((response) => {
-    //           return response.json();
-    //         })
-    //         .then((data) => {
-    //           if (data.is_safe) {
-    //             getRate(
-    //               data.active_cases_per_million,
-    //               data.fully_vaccinated_proportion,
-    //               data.vulnerable_proportion
-    //             );
-    //           }
-    //         });
-    //     });
-    //   });
+        // // MAY HAVE PROBLEMS DUE TO ASYNC???
+        // setLowRiskRegions(retval.slice(0, 2));
+        // setHighRiskRegions(retval.slice(retval.length - 2, retval.length));
+      });
   }, []);
 
   return (
