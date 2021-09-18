@@ -72,7 +72,7 @@ function FullRegions(props) {
       .then(res => res.json())
       .then(
         result => {
-          console.log(result)
+          console.log(result.regions)
           setRegionData(result);
         }
       ).catch((error) => {
@@ -87,16 +87,16 @@ function FullRegions(props) {
           <img src={travelIcon} alt="Two person traveling." />
           <h2>Let's book that trip!</h2>
         </div>
-        {/* <CovidStats displayHeader regionsData={regionData.filter(data => data.is_safe)} /> */}
-        <CovidStats displayHeader regionsData={regionData} />
+        <CovidStats displayHeader regionsData={regionData.filter(data => data.is_safe)} />
+        {/* <CovidStats displayHeader regionsData={regionData} /> */}
       </div>
       <div className="warning-regions">
         <div className="call-to-action">
           <h2>Maybe Netflix would be better?</h2>
           <img src={homeIcon} alt="A person chilling at home." />
         </div>
-        {/* <CovidStats displayHeader regionsData={regionData.filter(data => !data.is_safe)} /> */}
-        <CovidStats displayHeader regionsData={regionData} />
+        <CovidStats displayHeader regionsData={regionData.filter(data => !data.is_safe)} />
+        {/* <CovidStats displayHeader regionsData={regionData} /> */}
 
       </div>
     </section>

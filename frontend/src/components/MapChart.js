@@ -38,6 +38,7 @@ const MapChart = ({ setTooltipContent, callScrollApp }) => {
                                     // onClick={switchPaths}
                                     onMouseEnter={() => {
                                         const { name } = geo.properties;
+                                        console.log(name);
                                         setTooltipContent(<FullRegions provinceCode={"ON"} />)
                                     }}
                                     onClick={() => {
