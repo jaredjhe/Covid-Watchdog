@@ -71,22 +71,42 @@ function FullRegions(props) {
       try {
         const provinceDataJson = await fetch(`http://localhost:8000/api/v1/CanadaCovidInfo/${provinceCode}/provinceInfo`);
         const provinceData = await provinceDataJson.json();
-        console.log(provinceData)
-        const regionsDataArray = await Promise.all(provinceData.regions.map(async (el) => await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`).then(res => res.json())));
-        // const regionsDataArray = await Promise.all(regionsDataJsonArray.map(async (el) => await el.json()))
-        console.log(regionsDataArray);
+        // console.log(provinceData)
+        const regionsDataArray = await Promise.all((provinceData.regions).map(async (el) => await fetch(`http://localhost:8000/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`)))
+          .then(res => {
+            let resArray = [];
+            for (let i = 0; i < res.length; ++i) {
+              resArray = resArray.concat(res[i].json());
+            }
+            return resArray;
+          }).then(data => {
+            let arrayOfPromises = data;
+            console.log(arrayOfPromises);
+          })
+
+
+        // const jsonregionsDataArray = regionsD
+        // .then(res => {
+        //   Promise.all(regionsDataJsonArray.map(async (el) => await el.json()))
+        // });
+
+        // const x = await regionsDataJsonArray[0].json();
+
+        // console.log(x);
+
+
 
         // const regionsDataArray = provinceData.regions.map(async (el) => {
         //   const curRegionDataJson = await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`);
         //   const curRegionData = await curRegionDataJson.json();
         //   console.log(curRegionData);
         //   return curRegionData;
-          // return await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`);
+        // return await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`);
         // })
-        // console.log(regionsDataArray);
-        setRegionData(regionsDataArray);
+
+        // setRegionData(regionsDataJsonArray);
       }
-      catch(error) {
+      catch (error) {
         throw new Error(error)
       }
     }
