@@ -250,17 +250,10 @@ export default class CanadaCovidInfo {
     static async asyncGetCovidInfoProvinceAllRegion(req, res, next) {
         let province = req.params.prov
 
-        var today = new Date();
-        var date = new Date(today)
-
-        date.setDate(date.getDate() - 1)
-        
-        let dateStr = getDateFormat(date)
-
         const regionsResponse = await fetch(`https://api.covid19tracker.ca/province/${province}/regions`)
 
         const regionList = await regionsResponse.json()
-
+        
         let fetchCalls = []
 
         for (var elem in regionList) {
@@ -271,6 +264,8 @@ export default class CanadaCovidInfo {
         }
 
         let responses = await Promise.all(fetchCalls)
+
+
 
         res.json(responses)
         return   
