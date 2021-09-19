@@ -15,7 +15,7 @@ const MapChart = ({ setTooltipContent, callScrollApp, setRegionData }) => {
     }
     return (
         <div style={{
-            width: "60%",
+            width: "55%",
             height: "100%",
             margin: "auto",
             padding: "auto",

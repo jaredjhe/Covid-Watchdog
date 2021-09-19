@@ -32,6 +32,14 @@ function App() {
         <div className="title">
           <h1>COVID Watchdog</h1>
           <h2>Keeps you safe while exploring The Great North</h2>
+          <p>Made with the four brain cells of {' '}
+            <a href="https://github.com/dylex-suan">Dylex</a>,
+            <a href="https://github.com/jaredjhe">{' '}Jared</a>,
+            <a href="https://github.com/mhahelwa2020">{' '}Jared</a>,
+            {' '}and{' '}
+            <a href="https://github.com/albertjlay">Albert {' '}</a>
+            :)
+          </p>
         </div>
         <TestMap callScrollApp={callScrollApp}  setProvince={setProvince}/>
       </div>
