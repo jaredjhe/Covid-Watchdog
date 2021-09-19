@@ -43,9 +43,10 @@ function getDateFormat (date) {
 
 }
 
-function getRegionInfo (regionsList, province) {
 
-}
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
 
 /**
@@ -64,7 +65,7 @@ export default class CanadaCovidInfo {
         
 
         request(`https://api.opencovid.ca/summary?loc=${province}`, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
                 let data = JSON.parse(body)["summary"]
                 for (let elem in data) {       
 
@@ -105,13 +106,13 @@ export default class CanadaCovidInfo {
                     }
 
                     return new request('https://api.opencovid.ca/other?stat=hr', function (regionError, regionResponse, regionBody) {
-                        if (!regionError && regionResponse.statusCode == 200) {
+                        if (!regionError && regionResponse.statusCode === 200) {
                             let region = JSON.parse(regionBody)["hr"]
             
                             if (region !== undefined) {
                                 let regionList = []
                                 for (var elem in region) {
-                                    if (region[elem]["province_short"] == province) {
+                                    if (region[elem]["province_short"] === province) {
                                         let regionInfo = {
                                             hr_uid: region[elem]["HR_UID"],
                                             health_region: region[elem]["health_region"],
@@ -152,11 +153,16 @@ export default class CanadaCovidInfo {
         
         let dateStr = getDateFormat(date)
         request('https://api.covid19tracker.ca/summary/split/hr', function (hrError, regionsJson, hrBody) {
-            if (!hrError && regionsJson.statusCode == 200) {
+            console.log(0)
+            if (hrBody[0] === "<") {
+                res.status(404).json({ error: "Rate Limited" })
+                return
+            }
+            if (!hrError && regionsJson.statusCode === 200) {
                 let data = JSON.parse(hrBody)["data"]
 
-                for (let elem in data) {
-                    if (data[elem]["hr_uid"] == regionId) {
+                for (var elem in data) {
+                    if (data[elem]["hr_uid"] === regionId) {
                         let finalResponse = {
                             prov: province,
                             region: null,
@@ -178,18 +184,20 @@ export default class CanadaCovidInfo {
                             isSafe: null
                         }
 
+                        console.log(1)
+
                         return new  request('https://api.opencovid.ca/other?stat=hr', function (popError, popResponse, popBody) {
-                            if (!popError && popResponse.statusCode == 200) {
+                            if (!popError && popResponse.statusCode === 200) {
                                 let regionList = JSON.parse(popBody)["hr"]
 
                                 for (var i in regionList) {
-                                    if (regionList[i]["HR_UID"] == regionId) {
+                                    if (regionList[i]["HR_UID"] === regionId) {
                                         let regionPop = regionList[i]["pop"]
                                         finalResponse.population = regionPop
                                         finalResponse.region = regionList[i]["health_region"]
 
                                         return  new request(`https://api.opencovid.ca/timeseries?stat=cases&loc=${regionId}&date=${dateStr}`, function (casesError, casesResponse, casesBody){
-                                            if (!casesError && casesResponse.statusCode == 200) {
+                                            if (!casesError && casesResponse.statusCode === 200) {
                                                 let caseData = JSON.parse(casesBody)["cases"][0]
 
                                                 if (caseData.length !== 0) {
@@ -235,9 +243,8 @@ export default class CanadaCovidInfo {
                                 return
                             }
                         });
-                        res.json(finalResponse)
-                        return
                     } 
+
                 }
                 res.status(400).json({ error: "Province or region not found" })
                 return
@@ -252,23 +259,32 @@ export default class CanadaCovidInfo {
 
         const regionsResponse = await fetch(`https://api.covid19tracker.ca/province/${province}/regions`)
 
-        const regionList = await regionsResponse.json()
-        
-        let fetchCalls = []
+        if  (regionsResponse.status === 200) {
+            const regionList = await regionsResponse.json().catch(e => console.log("Endpoint failed: " + e))
 
-        for (var elem in regionList) {
-
-            fetchCalls.push(
-                fetch (`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/${regionList[elem]["hr_uid"]}/regionInfo`)
-                .then(response => response.json()))
+            let fetchCalls = []
+    
+            for (var elem in regionList) {
+                if (regionList[elem]["hr_uid"] !== 9999) {
+                    fetchCalls.push(
+                        fetch (`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/${regionList[elem]["hr_uid"]}/regionInfo`)
+                        .then(response => response.json()
+                        ).catch(e => console.log("Endpoint failed: " + e)))
+                }
+                sleep(1000)
+    
+            }
+    
+            let responses = await Promise.all(fetchCalls).catch(e => console.log("Endpoint failed: " + e))
+    
+    
+            res.json(responses)
+            return   
+        } else {
+            res.status(404).json({ error: "Not found" })
+            return
         }
 
-        let responses = await Promise.all(fetchCalls)
-
-
-
-        res.json(responses)
-        return   
     }
 
 
