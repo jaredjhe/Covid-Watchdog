@@ -1,5 +1,6 @@
 import { response } from "express"
 import request from "request"
+import fetch from "node-fetch"
 
 const population = {
     ON: 14789778,
@@ -150,8 +151,8 @@ export default class CanadaCovidInfo {
         date.setDate(date.getDate() - 1)
         
         let dateStr = getDateFormat(date)
-        request('https://api.covid19tracker.ca/summary/split/hr', function (hrError, hrResponse, hrBody) {
-            if (!hrError && hrResponse.statusCode == 200) {
+        request('https://api.covid19tracker.ca/summary/split/hr', function (hrError, regionsJson, hrBody) {
+            if (!hrError && regionsJson.statusCode == 200) {
                 let data = JSON.parse(hrBody)["data"]
 
                 for (let elem in data) {
@@ -256,35 +257,23 @@ export default class CanadaCovidInfo {
         
         let dateStr = getDateFormat(date)
 
-        request(`https://api.covid19tracker.ca/province/${province}/regions`, function (hrError, hrResponse, hrBody) {
-            if (!hrError && hrResponse.statusCode == 200) {
-                let regionList = JSON.parse(hrBody)
-                let fetchCalls = []
+        const regionsResponse = await fetch(`https://api.covid19tracker.ca/province/${province}/regions`)
 
-                let x = []
-                for (var elem in regionList) {
+        const regionList = await regionsResponse.json()
 
-                    fetchCalls.push(request (`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/${regionList[elem]["hr_uid"]}/regionInfo` , function (Error, Response, Body)
-                    {
-                        return Body
-                    }))
-                }
+        let fetchCalls = []
 
-                    let calls = Promise.all(fetchCalls).then(response =>
-                        {
-                            console.log(response)
-                        })
+        for (var elem in regionList) {
 
-                        
-                        res.json(x)
-                        return
-                
-            } else {
-                res.status(404).json({ error: "Not found" })
-                return
-            }
-        });
+            fetchCalls.push(
+                fetch (`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/${regionList[elem]["hr_uid"]}/regionInfo`)
+                .then(response => response.json()))
+        }
 
+        let responses = await Promise.all(fetchCalls)
+
+        res.json(responses)
+        return   
     }
 
 

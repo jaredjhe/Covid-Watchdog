@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.route("/:prov/provinceInfo").get(CanadaCovidInfo.asyncGetCovidInfoProvince)
 router.route("/:prov/:regId/regionInfo").get(CanadaCovidInfo.asyncGetCovidInfoRegion)
-router.route("/:prov/allRegionInfo").get(CanadaCovidInfo.asyncGetCovidInfoProvinceAllRegion)
+router.route("/:prov/allRegionsInfo").get(CanadaCovidInfo.asyncGetCovidInfoProvinceAllRegion)
 
 
 
