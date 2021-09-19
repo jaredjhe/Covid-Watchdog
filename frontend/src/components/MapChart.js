@@ -15,17 +15,13 @@ const MapChart = ({ setTooltipContent, callScrollApp, setRegionData }) => {
     }
     return (
         <div style={{
-            position: "relative",
-            left: "0%",
-            top: "30%",
-            width: "100%",
+            width: "60%",
             height: "100%",
             margin: "auto",
             padding: "auto",
-            border: "solid",
         }}>
-            <ComposableMap projection="geoMercator" data-tip="" width={1000} height={750} projectionConfig={{ scale: 300 }} disableZzoming disablepanning>
-                <ZoomableGroup center={[270, 430]} disablezooming disablepanning>
+            <ComposableMap projection="geoMercator" data-tip="" width={1000} height={750} projectionConfig={{ scale: 350 }}>
+                <ZoomableGroup center={[270, 430]} minZoom={1} maxZoom={1}>
                     <Geographies geography={canadaMap}>
                         {({ geographies }) => (
                             geographies.map(geo => (
@@ -45,15 +41,15 @@ const MapChart = ({ setTooltipContent, callScrollApp, setRegionData }) => {
                                     }}
                                     style={{
                                         default: {
-                                            fill: "#D6D6DA",
+                                            fill: "#773d9c",
                                             outline: "none",
                                         },
                                         hover: {
-                                            fill: "#F53",
+                                            fill: '#56008c',
                                             outline: "none",
                                         },
                                         pressed: {
-                                            fill: "#E42",
+                                            fill: '#56008c',
                                             outline: "none"
                                         }
                                     }}

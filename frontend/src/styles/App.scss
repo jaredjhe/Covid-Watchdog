@@ -5,4 +5,28 @@ $main-font: 'Rubik', sans-serif;
 * {
   box-sizing: border-box;
   font-family: $main-font;
+  margin: 0;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  .landing {
+    height: 100vh;
+    background-color: rgba(184, 227, 255, 0.596);
+  }
+
+  h1 {
+    padding-top: 1em;
+    text-align: center;
+    margin: 0;
+    font-weight: 500;
+  }
+  h2 {
+    text-align: center;
+    font-weight: 300;
+    margin-bottom: 1em;
+  }
 }

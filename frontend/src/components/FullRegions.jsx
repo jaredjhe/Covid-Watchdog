@@ -12,9 +12,6 @@ function FullRegions(props) {
   return (
     <RegionData.Consumer>
       {(value) => {
-        console.log(value);
-        console.log(provinceCode)
-        console.log(value[provinceCode])
         return (
           <section className="full-regions">
             <div className="safe-regions">

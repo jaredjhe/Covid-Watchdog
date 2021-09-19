@@ -3,7 +3,20 @@ import React from 'react'
 const RegionData = React.createContext([])
 export default RegionData;
 
+
+
 export const RegionDataProvider = (props) => {
+
+
+async function connectBackend() {
+  const provinceCodes = ['ON', 'QC', 'BC', 'MB', 'NT', 'NS', 'NU', 'PE', 'SK', 'YT', 'NB', 'AB', 'NL'];
+  const provinceDataJson = await Promise.all(provinceCodes.map((code) => fetch(`/api/v1/CanadaCovidInfo/${code}/provinceInfo`)));
+  const provinceData = await Promise.all(provinceDataJson.map((header) => header.json()));
+  console.log(provinceData)
+}
+
+connectBackend()
+  
   const regionData = {
     ON: {
       prov: 'ON', 
