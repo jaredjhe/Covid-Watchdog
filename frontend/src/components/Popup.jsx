@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import TravelIcon from "../assets/travel.svg";
-import CovidStats from "./CovidStats";
-import "../styles/Popup.scss";
-import provinceDesc from "./provinceDesc.json";
-import RegionData from "../region-data";
+import React, { useState } from 'react';
+import TravelIcon from '../assets/travel.svg';
+import CovidStats from './CovidStats';
+import '../styles/Popup.scss';
+import provinceDesc from './provinceDesc.json';
+import RegionData from '../region-data';
 
 const Popup = (props) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [isSafe, setIsSafe] = useState(true);
 
   return (
@@ -14,9 +14,10 @@ const Popup = (props) => {
       {(value) => {
         const provinceValue = value[props.province];
 
-
-        {/* setName(provinceValue.prov);
-        setIsSafe(provinceValue.is_safe); */}
+        {
+          /* setName(provinceValue.prov);
+        setIsSafe(provinceValue.is_safe); */
+        }
         const sortedRegions = provinceValue.regions.sort(
           (a, b) => a.active_cases_per_million - b.active_cases_per_million
         );
@@ -27,7 +28,7 @@ const Popup = (props) => {
           <div className="popup">
             <div
               className="is-safe-bar"
-              style={{ backgroundColor: isSafe ? "#00BFA6" : "#F50057" }}
+              style={{ backgroundColor: isSafe ? '#00BFA6' : '#F50057' }}
             >
               <div className="content">
                 <div className="header">
@@ -42,9 +43,8 @@ const Popup = (props) => {
               </div>
             </div>
           </div>
-        )
+        );
       }}
-
     </RegionData.Consumer>
   );
 };
