@@ -153,7 +153,6 @@ export default class CanadaCovidInfo {
         
         let dateStr = getDateFormat(date)
         request('https://api.covid19tracker.ca/summary/split/hr', function (hrError, regionsJson, hrBody) {
-            console.log(0)
             if (hrBody[0] === "<") {
                 res.status(404).json({ error: "Rate Limited" })
                 return
@@ -183,8 +182,6 @@ export default class CanadaCovidInfo {
                             vulnerable_proportion_safe: null,
                             isSafe: null
                         }
-
-                        console.log(1)
 
                         return new  request('https://api.opencovid.ca/other?stat=hr', function (popError, popResponse, popBody) {
                             if (!popError && popResponse.statusCode === 200) {
