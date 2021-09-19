@@ -9,28 +9,45 @@ import "./styles/FullRegions.scss";
 
 
 function App() {
-
-
   async function connectBackend() {
     try {
       const provinceCodes = ['ON', 'QC', 'BC', 'MB', 'NT', 'NS', 'NU', 'PE', 'SK', 'YT', 'NB', 'AB', 'NL'];
       const provinceDataJson = await Promise.all(provinceCodes.map((code) => fetch(`http://localhost:5000/api/v1/CanadaCovidInfo/${code}/provinceInfo`)));
+      sessionStorage.setItem("provinceDataJson", JSON.stringify(provinceDataJson))
       const provinceData = await Promise.all(provinceDataJson.map((header) => header.json()));
+      sessionStorage.setItem("provinceData", JSON.stringify(provinceData));
 
       let newProvinceData = provinceData.reduce(function (map, obj) {
         map[obj.prov] = obj;
         return map;
       }, {});
 
+      const asyncSessionStorage = {
+        setItem: function (key, value) {
+          return Promise.resolve().then(function () {
+            sessionStorage.setItem(key, value);
+          }).catch(err => console.log(err));
+        },
+        getItem: function (key) {
+          return Promise.resolve().then(function () {
+            return sessionStorage.getItem(key);
+          });
+        }
+      };
 
+      let fetches = [];
       for (const province in newProvinceData) {
-        await fetch(`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/allRegionsInfo`)
+        fetches.push(fetch(`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/allRegionsInfo`)
           .then(response => response.json())
           .then(data => {
             console.log("Hello!");
+            console.log(data);
             newProvinceData[province].regions = data;
-          }).catch(err => console.log(err));
+            asyncSessionStorage.setItem(`${province}Regions`, JSON.stringify(data))
+          }).catch(err => console.log(err)));
       }
+
+      Promise.all(fetches).then(console.log(newProvinceData));
     } catch (err) {
       console.log(err);
     }
