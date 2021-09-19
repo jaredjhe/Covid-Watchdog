@@ -11,7 +11,7 @@ import Popup from "./Popup";
 
 let canadaMap = require('../mapshapes/Canada_Map.json')
 
-const MapChart = ({ setTooltipContent, callScrollApp }) => {
+const MapChart = ({ setTooltipContent, callScrollApp, setRegionData }) => {
     const chartcallScrollApp = (nameOfProvince) => {
         callScrollApp(nameOfProvince);
     }

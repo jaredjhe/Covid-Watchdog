@@ -79,7 +79,7 @@ function FullRegions(props) {
               <img src={travelIcon} alt="Two person traveling." />
               <h2>Let's book that trip!</h2>
             </div>
-            <CovidStats displayHeader regionsData={value[provinceCode].filter(data => data.is_safe)} />
+            <CovidStats displayHeader regionsData={value[provinceCode].regions.filter(data => data.is_safe)} />
             {/* <CovidStats displayHeader regionsData={regionData} /> */}
             </div>
             <div className="warning-regions">
@@ -87,7 +87,7 @@ function FullRegions(props) {
              <h2>Maybe Netflix would be better?</h2>
             <img src={homeIcon} alt="A person chilling at home." />
           </div>
-          <CovidStats displayHeader regionsData={value[provinceCode].filter(data => !data.is_safe)} />
+          <CovidStats displayHeader regionsData={value[provinceCode].regions.filter(data => !data.is_safe)} />
           {/* <CovidStats displayHeader regionsData={regionData} /> */}
               </div>
           </section>

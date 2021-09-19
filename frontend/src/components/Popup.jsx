@@ -7,7 +7,7 @@ import RegionData from "../region-data";
 
 const Popup = (props) => {
   const [name, setName] = useState("");
-  // const [isSafe, setIsSafe] = useState(true);
+  const [isSafe, setIsSafe] = useState(true);
 
   return (
     <RegionData.Consumer>
@@ -15,9 +15,9 @@ const Popup = (props) => {
         const provinceValue = value[props.province];
       
 
-        setName('Ontario');
-        // setIsSafe(provinceValue.isSafe);
-        const sortedRegions = provinceValue.sort(
+        setName(provinceValue.prov);
+        setIsSafe(provinceValue.is_safe);
+        const sortedRegions = provinceValue.regions.sort(
           (a, b) => a.active_cases_per_million - b.active_cases_per_million
         );
         const lowRiskRegions = sortedRegions.slice(0, 2);
@@ -27,7 +27,7 @@ const Popup = (props) => {
           <div className="popup">
       <div
         className="is-safe-bar"
-        // style={{ backgroundColor: isSafe ? "#00BFA6" : "#F50057" }}
+        style={{ backgroundColor: isSafe ? "#00BFA6" : "#F50057" }}
       >
         <div className="content">
           <div className="header">
