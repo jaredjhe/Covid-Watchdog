@@ -40,14 +40,12 @@ function App() {
         fetches.push(fetch(`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/allRegionsInfo`)
           .then(response => response.json())
           .then(data => {
-            console.log("Hello!");
-            console.log(data);
             newProvinceData[province].regions = data;
-            asyncSessionStorage.setItem(`${province}Regions`, JSON.stringify(data))
-          }).catch(err => console.log(err)));
+            console.log(newProvinceData[province].regions);
+          }))
       }
 
-      Promise.all(fetches).then(console.log(newProvinceData));
+      console.log("Hello!");
     } catch (err) {
       console.log(err);
     }
