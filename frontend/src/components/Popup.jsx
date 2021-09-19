@@ -14,10 +14,9 @@ const Popup = (props) => {
       {(value) => {
         const provinceValue = value[props.province];
 
-        {
-          /* setName(provinceValue.prov);
-        setIsSafe(provinceValue.is_safe); */
-        }
+        setName(provinceValue.prov);
+        setIsSafe(provinceValue.is_safe);
+
         const sortedRegions = provinceValue.regions.sort(
           (a, b) => a.active_cases_per_million - b.active_cases_per_million
         );
@@ -34,7 +33,7 @@ const Popup = (props) => {
                 <div className="header">
                   <div className="province">
                     <h1>{name}</h1>
-                    <h2>{provinceDesc[name]}</h2>
+                    <h2>{provinceDesc[props.province]}</h2>
                   </div>
                   <img src={TravelIcon} alt="Two people traveling" />
                 </div>

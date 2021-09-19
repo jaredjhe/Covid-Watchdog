@@ -3,9 +3,9 @@ export function regionActiveCasesPerMillionStyle(regionData) {
 }
 
 export function regionFullyVaccinatedProportionStyle(regionData) {
-  return regionData.fully_vaccinated_proportion > 0.75 ? 'safe' : 'warning';
+  return regionData.fully_vaccinated_proportion > 0.65 ? 'safe' : 'warning';
 }
 
 export function regionVulnerableProportionStyle(regionData) {
-  return regionData.vulnerable_proportion <= 0.03 ? 'safe' : 'warning';
+  return regionData.vulnerable_proportion <= 0.35 ? 'safe' : 'warning';
 }

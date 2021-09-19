@@ -19,8 +19,8 @@ const population = {
 };
 
 const baselineActiveCases = 700;
-const baselineFullyVacxxed = 0.6;
-const baselineVulnerable = 0.4;
+const baselineFullyVacxxed = 0.65;
+const baselineVulnerable = 0.35;
 const vaccinatedRiskConstant = 0.0008;
 
 function getDateFormat(date) {
