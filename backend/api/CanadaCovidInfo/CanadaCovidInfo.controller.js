@@ -1,4 +1,6 @@
+import { response } from "express"
 import request from "request"
+import fetch from "node-fetch"
 
 const population = {
     ON: 14789778,
@@ -38,6 +40,10 @@ function getDateFormat (date) {
     } 
 
     return (dd+'-'+mm+'-'+yyyy);
+
+}
+
+function getRegionInfo (regionsList, province) {
 
 }
 
@@ -138,16 +144,15 @@ export default class CanadaCovidInfo {
     static async asyncGetCovidInfoRegion(req, res, next) {
         let province = req.params.prov
         let regionId = parseInt(req.params.regId) 
-        console.log(regionId)
+
         var today = new Date();
         var date = new Date(today)
 
         date.setDate(date.getDate() - 1)
         
         let dateStr = getDateFormat(date)
-        console.log(dateStr)
-        request('https://api.covid19tracker.ca/summary/split/hr', function (hrError, hrResponse, hrBody) {
-            if (!hrError && hrResponse.statusCode == 200) {
+        request('https://api.covid19tracker.ca/summary/split/hr', function (hrError, regionsJson, hrBody) {
+            if (!hrError && regionsJson.statusCode == 200) {
                 let data = JSON.parse(hrBody)["data"]
 
                 for (let elem in data) {
@@ -186,7 +191,6 @@ export default class CanadaCovidInfo {
                                         return  new request(`https://api.opencovid.ca/timeseries?stat=cases&loc=${regionId}&date=${dateStr}`, function (casesError, casesResponse, casesBody){
                                             if (!casesError && casesResponse.statusCode == 200) {
                                                 let caseData = JSON.parse(casesBody)["cases"][0]
-                                                console.log(caseData)
 
                                                 if (caseData.length !== 0) {
                                                     
@@ -240,6 +244,36 @@ export default class CanadaCovidInfo {
             }
         });
 
+    }
+
+
+    static async asyncGetCovidInfoProvinceAllRegion(req, res, next) {
+        let province = req.params.prov
+
+        var today = new Date();
+        var date = new Date(today)
+
+        date.setDate(date.getDate() - 1)
+        
+        let dateStr = getDateFormat(date)
+
+        const regionsResponse = await fetch(`https://api.covid19tracker.ca/province/${province}/regions`)
+
+        const regionList = await regionsResponse.json()
+
+        let fetchCalls = []
+
+        for (var elem in regionList) {
+
+            fetchCalls.push(
+                fetch (`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/${regionList[elem]["hr_uid"]}/regionInfo`)
+                .then(response => response.json()))
+        }
+
+        let responses = await Promise.all(fetchCalls)
+
+        res.json(responses)
+        return   
     }
 
 
