@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { scroller } from 'react-scroll';
 import {
     ComposableMap,
     Geographies,
@@ -35,6 +36,10 @@ const MapChart = ({ setTooltipContent, callScrollApp, setRegionData }) => {
                                     }}
                                     onClick={() => {
                                         chartcallScrollApp((geo.id).substring(3));
+                                        scroller.scrollTo('full-regions', {
+                                            duration: 1500,
+                                            delay: 100,
+                                            smooth: true,});
                                     }}
                                     onMouseLeave={() => {
                                         setTooltipContent("");

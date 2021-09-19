@@ -13,7 +13,7 @@ function FullRegions(props) {
     <RegionData.Consumer>
       {(value) => {
         return (
-          <section className="full-regions">
+          <section className="full-regions" id='full-regions'>
             <div className="safe-regions">
             <div className="call-to-action">
               <img src={travelIcon} alt="Two person traveling." />
