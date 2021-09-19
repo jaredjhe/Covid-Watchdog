@@ -23,11 +23,22 @@ const Popup = (props) => {
         const lowRiskRegions = sortedRegions.slice(0, 2);
         const highRiskRegions = sortedRegions.slice(sortedRegions.length - 2, sortedRegions.length);
 
+        let safeCount = 0;
+        for (let i = 0; i < sortedRegions.length; i++) {
+          if (sortedRegions[i].isSafe) {
+            safeCount++;
+          }
+        }
+        console.log(safeCount);
+        console.log(sortedRegions.length);
+
         return (
           <div className="popup">
             <div
               className="is-safe-bar"
-              style={{ backgroundColor: isSafe ? '#00BFA6' : '#F50057' }}
+              style={{
+                backgroundColor: safeCount > sortedRegions.length / 2 ? '#00BFA6' : '#F50057',
+              }}
             >
               <div className="content">
                 <div className="header">
