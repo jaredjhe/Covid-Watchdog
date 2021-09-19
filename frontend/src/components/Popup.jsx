@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TravelIcon from "../assets/travel.svg";
 import CovidStats from "./CovidStats";
 import "../styles/Popup.scss";

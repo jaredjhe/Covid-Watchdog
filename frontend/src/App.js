@@ -1,8 +1,7 @@
-import React, { Component, useRef, useState } from "react";
+import React, { useState } from "react";
 import FullRegions from "./components/FullRegions";
 import TestMap from "./components/MapTest";
-import Popup from "./components/Popup";
-import RegionData, { RegionDataProvider } from "./region-data";
+import { RegionDataProvider } from "./region-data";
 
 import "./styles/App.scss";
 import "./styles/CovidStats.scss";
