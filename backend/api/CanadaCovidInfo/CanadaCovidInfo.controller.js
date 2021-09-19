@@ -1,3 +1,4 @@
+import { response } from "express"
 import request from "request"
 
 const population = {
@@ -38,6 +39,10 @@ function getDateFormat (date) {
     } 
 
     return (dd+'-'+mm+'-'+yyyy);
+
+}
+
+function getRegionInfo (regionsList, province) {
 
 }
 
@@ -138,14 +143,13 @@ export default class CanadaCovidInfo {
     static async asyncGetCovidInfoRegion(req, res, next) {
         let province = req.params.prov
         let regionId = parseInt(req.params.regId) 
-        console.log(regionId)
+
         var today = new Date();
         var date = new Date(today)
 
         date.setDate(date.getDate() - 1)
         
         let dateStr = getDateFormat(date)
-        console.log(dateStr)
         request('https://api.covid19tracker.ca/summary/split/hr', function (hrError, hrResponse, hrBody) {
             if (!hrError && hrResponse.statusCode == 200) {
                 let data = JSON.parse(hrBody)["data"]
@@ -186,7 +190,6 @@ export default class CanadaCovidInfo {
                                         return  new request(`https://api.opencovid.ca/timeseries?stat=cases&loc=${regionId}&date=${dateStr}`, function (casesError, casesResponse, casesBody){
                                             if (!casesError && casesResponse.statusCode == 200) {
                                                 let caseData = JSON.parse(casesBody)["cases"][0]
-                                                console.log(caseData)
 
                                                 if (caseData.length !== 0) {
                                                     
@@ -236,6 +239,48 @@ export default class CanadaCovidInfo {
                     } 
                 }
                 res.status(400).json({ error: "Province or region not found" })
+                return
+            }
+        });
+
+    }
+
+
+    static async asyncGetCovidInfoProvinceAllRegion(req, res, next) {
+        let province = req.params.prov
+
+        var today = new Date();
+        var date = new Date(today)
+
+        date.setDate(date.getDate() - 1)
+        
+        let dateStr = getDateFormat(date)
+
+        request(`https://api.covid19tracker.ca/province/${province}/regions`, function (hrError, hrResponse, hrBody) {
+            if (!hrError && hrResponse.statusCode == 200) {
+                let regionList = JSON.parse(hrBody)
+                let fetchCalls = []
+
+                let x = []
+                for (var elem in regionList) {
+
+                    fetchCalls.push(request (`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/${regionList[elem]["hr_uid"]}/regionInfo` , function (Error, Response, Body)
+                    {
+                        return Body
+                    }))
+                }
+
+                    let calls = Promise.all(fetchCalls).then(response =>
+                        {
+                            console.log(response)
+                        })
+
+                        
+                        res.json(x)
+                        return
+                
+            } else {
+                res.status(404).json({ error: "Not found" })
                 return
             }
         });
