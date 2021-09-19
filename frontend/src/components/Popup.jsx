@@ -9,6 +9,7 @@ const Popup = (props) => {
   const [isSafe, setIsSafe] = useState(true);
   const [lowRiskRegions, setLowRiskRegions] = useState([]);
   const [highRiskRegions, setHighRiskRegions] = useState([]);
+  const [allRegions, setAllRegions] = useState([]);
 
   useEffect(() => {
     fetch(`/api/v1/CanadaCovidInfo/${props.province}/provinceInfo`)
@@ -21,10 +22,15 @@ const Popup = (props) => {
         const sortedRegions = data.regions.sort(
           (a, b) => a.active_cases_per_million - b.active_cases_per_million
         );
-        setLowRiskRegions(sortedRegions.slice(0, 2));
-        setHighRiskRegions(
-          sortedRegions.slice(sortedRegions.length - 2, sortedRegions.length)
-        );
+
+        if (sortedRegions.length >= 6) {
+          setLowRiskRegions(sortedRegions.slice(0, 2));
+          setHighRiskRegions(
+            sortedRegions.slice(sortedRegions.length - 2, sortedRegions.length)
+          );
+        } else {
+          setAllRegions(sortedRegions);
+        }
       });
   }, [props.province]);
 
@@ -42,8 +48,16 @@ const Popup = (props) => {
             </div>
             <img src={TravelIcon} alt="Two people traveling" />
           </div>
-          <CovidStats displayHeader={true} regionsData={lowRiskRegions} />
-          <CovidStats displayHeader={false} regionsData={highRiskRegions} />
+          {allRegions.length === 0 ? (
+            <div>
+              <CovidStats displayHeader={true} regionsData={lowRiskRegions} />
+              <CovidStats displayHeader={false} regionsData={highRiskRegions} />
+            </div>
+          ) : (
+            <div>
+              <CovidStats displayHeader={true} regionsData={allRegions} />
+            </div>
+          )}
         </div>
       </div>
     </div>
