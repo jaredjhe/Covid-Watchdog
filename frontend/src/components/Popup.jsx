@@ -13,10 +13,10 @@ const Popup = (props) => {
     <RegionData.Consumer>
       {(value) => {
         const provinceValue = value[props.province];
-      
 
-        setName(provinceValue.prov);
-        setIsSafe(provinceValue.is_safe);
+
+        {/* setName(provinceValue.prov);
+        setIsSafe(provinceValue.is_safe); */}
         const sortedRegions = provinceValue.regions.sort(
           (a, b) => a.active_cases_per_million - b.active_cases_per_million
         );
@@ -25,26 +25,26 @@ const Popup = (props) => {
 
         return (
           <div className="popup">
-      <div
-        className="is-safe-bar"
-        style={{ backgroundColor: isSafe ? "#00BFA6" : "#F50057" }}
-      >
-        <div className="content">
-          <div className="header">
-            <div className="province">
-              <h1>{name}</h1>
-              <h2>{provinceDesc[name]}</h2>
+            <div
+              className="is-safe-bar"
+              style={{ backgroundColor: isSafe ? "#00BFA6" : "#F50057" }}
+            >
+              <div className="content">
+                <div className="header">
+                  <div className="province">
+                    <h1>{name}</h1>
+                    <h2>{provinceDesc[name]}</h2>
+                  </div>
+                  <img src={TravelIcon} alt="Two people traveling" />
+                </div>
+                <CovidStats displayHeader={true} regionsData={lowRiskRegions} />
+                <CovidStats displayHeader={false} regionsData={highRiskRegions} />
+              </div>
             </div>
-            <img src={TravelIcon} alt="Two people traveling" />
           </div>
-          <CovidStats displayHeader={true} regionsData={lowRiskRegions} />
-          <CovidStats displayHeader={false} regionsData={highRiskRegions} />
-        </div>
-      </div>
-    </div>
         )
       }}
-    
+
     </RegionData.Consumer>
   );
 };
