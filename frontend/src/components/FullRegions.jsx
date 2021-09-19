@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import travelIcon from '../assets/travel.svg'
 import homeIcon from '../assets/relaxing-at-home.svg'
 import CovidStats from './CovidStats';
+import RegionData from '../region-data';
 
 function FullSafeRegions() {
   return (
@@ -64,76 +65,36 @@ function FullWarningRegions() {
  */
 function FullRegions(props) {
   const { provinceCode } = props;
-  const [regionData, setRegionData] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const provinceDataJson = await fetch(`http://localhost:8000/api/v1/CanadaCovidInfo/${provinceCode}/provinceInfo`);
-        const provinceData = await provinceDataJson.json();
-        // console.log(provinceData)
-        const regionsDataArray = await Promise.all((provinceData.regions).map(async (el) => await fetch(`http://localhost:8000/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`)))
-          .then(res => {
-            let resArray = [];
-            for (let i = 0; i < res.length; ++i) {
-              resArray = resArray.concat(res[i].json());
-            }
-            return resArray;
-          }).then(data => {
-            let arrayOfPromises = data;
-            console.log(arrayOfPromises);
-          })
-
-
-        // const jsonregionsDataArray = regionsD
-        // .then(res => {
-        //   Promise.all(regionsDataJsonArray.map(async (el) => await el.json()))
-        // });
-
-        // const x = await regionsDataJsonArray[0].json();
-
-        // console.log(x);
-
-
-
-        // const regionsDataArray = provinceData.regions.map(async (el) => {
-        //   const curRegionDataJson = await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`);
-        //   const curRegionData = await curRegionDataJson.json();
-        //   console.log(curRegionData);
-        //   return curRegionData;
-        // return await fetch(`/api/v1/CanadaCovidInfo/${provinceCode}/${el.hr_uid}/regionInfo`);
-        // })
-
-        // setRegionData(regionsDataJsonArray);
-      }
-      catch (error) {
-        throw new Error(error)
-      }
-    }
-    fetchData();
-
-  }, [provinceCode])
 
   return (
-    <section className="full-regions">
-      <div className="safe-regions">
-        <div className="call-to-action">
-          <img src={travelIcon} alt="Two person traveling." />
-          <h2>Let's book that trip!</h2>
-        </div>
-        <CovidStats displayHeader regionsData={regionData.filter(data => data.is_safe)} />
-        {/* <CovidStats displayHeader regionsData={regionData} /> */}
-      </div>
-      <div className="warning-regions">
-        <div className="call-to-action">
-          <h2>Maybe Netflix would be better?</h2>
-          <img src={homeIcon} alt="A person chilling at home." />
-        </div>
-        <CovidStats displayHeader regionsData={regionData.filter(data => !data.is_safe)} />
-        {/* <CovidStats displayHeader regionsData={regionData} /> */}
-
-      </div>
-    </section>
+    <RegionData.Consumer>
+      {(value) => {
+        console.log(value);
+        console.log(provinceCode)
+        console.log(value[provinceCode])
+        return (
+          <section className="full-regions">
+            <div className="safe-regions">
+            <div className="call-to-action">
+              <img src={travelIcon} alt="Two person traveling." />
+              <h2>Let's book that trip!</h2>
+            </div>
+            <CovidStats displayHeader regionsData={value[provinceCode].filter(data => data.is_safe)} />
+            {/* <CovidStats displayHeader regionsData={regionData} /> */}
+            </div>
+            <div className="warning-regions">
+            <div className="call-to-action">
+             <h2>Maybe Netflix would be better?</h2>
+            <img src={homeIcon} alt="A person chilling at home." />
+          </div>
+          <CovidStats displayHeader regionsData={value[provinceCode].filter(data => !data.is_safe)} />
+          {/* <CovidStats displayHeader regionsData={regionData} /> */}
+              </div>
+          </section>
+        )
+      }}
+    </RegionData.Consumer>
+    
   )
 }
 export default FullRegions;

@@ -48,6 +48,7 @@ import { regionActiveCasesPerMillionStyle, regionFullyVaccinatedProportionStyle,
 
 function CovidStats(props) {
   const { displayHeader, regionsData } = props;
+  console.log(regionsData)
 
   return (
   <table className="covid-stats">
