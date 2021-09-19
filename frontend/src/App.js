@@ -35,7 +35,7 @@ function App() {
           <p>Made with the four brain cells of {' '}
             <a href="https://github.com/dylex-suan">Dylex</a>,
             <a href="https://github.com/jaredjhe">{' '}Jared</a>,
-            <a href="https://github.com/mhahelwa2020">{' '}Jared</a>,
+            <a href="https://github.com/mhahelwa2020">{' '}Mohamed</a>,
             {' '}and{' '}
             <a href="https://github.com/albertjlay">Albert {' '}</a>
             :)
