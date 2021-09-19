@@ -27,12 +27,10 @@ function App() {
         await fetch(`http://localhost:5000/api/v1/CanadaCovidInfo/${province}/allRegionsInfo`)
           .then(response => response.json())
           .then(data => {
+            console.log("Hello!");
             newProvinceData[province].regions = data;
-            console.log(newProvinceData[province].regions);
-          });
+          }).catch(err => console.log(err));
       }
-
-      console.log("Hello!");
     } catch (err) {
       console.log(err);
     }
